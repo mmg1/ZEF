@@ -93,10 +93,10 @@
             // 
             // lbl_Bytes
             // 
-            this.lbl_Bytes.Location = new System.Drawing.Point(12, 123);
+            this.lbl_Bytes.Location = new System.Drawing.Point(12, 288);
             this.lbl_Bytes.Name = "lbl_Bytes";
             this.lbl_Bytes.Padding = new System.Windows.Forms.Padding(10);
-            this.lbl_Bytes.Size = new System.Drawing.Size(776, 318);
+            this.lbl_Bytes.Size = new System.Drawing.Size(776, 153);
             this.lbl_Bytes.TabIndex = 6;
             this.lbl_Bytes.Text = "0x0000";
             // 

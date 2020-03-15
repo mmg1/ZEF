@@ -38,7 +38,7 @@ namespace ZEF {
             NoHeaps = 0x40000000
         }
 
-        /*[Flags]
+        [Flags]
         public enum PageAccessFlags : uint {
             PAGE_NOACCESS = 0x01,
             PAGE_READONLY = 0x02,
@@ -84,7 +84,7 @@ namespace ZEF {
             MEM_DECOMMIT = 0x00004000,
             MEM_RELEASE = 0x00008000,
             MEM_FREE = 0x00010000
-        }*/
+        }
 
         // Low-level struct defs:
         [StructLayout(LayoutKind.Sequential)]
@@ -124,9 +124,6 @@ namespace ZEF {
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, out IntPtr lpNumberOfBytesRead);
 
-        //[DllImport("kernel32.dll", SetLastError = true)]
-        //public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [MarshalAs(UnmanagedType.AsAny)] object lpBuffer, uint nSize, out uint lpNumberOfBytesWritten);
-
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, UIntPtr nSize, out IntPtr lpNumberOfBytesWritten);
 
@@ -148,7 +145,7 @@ namespace ZEF {
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr CreateToolhelp32Snapshot(SnapshotFlags dwFlags, int th32ProcessID);
 
-        //[DllImport("kernel32.dll")]
-        //static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+        [DllImport("kernel32.dll")]
+        public static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, UIntPtr dwSize, PageAccessFlags flNewProtect, out PageAccessFlags lpflOldProtect);
     }
 }

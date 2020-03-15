@@ -43,13 +43,14 @@ namespace ZEF {
         }
         // Write to memory:
         public static void Patch(Process proc, IntPtr dst, byte[] bytes, UIntPtr size) {
+            PageAccessFlags oldProt;
             IntPtr num;
             Console.WriteLine("Writing " + Util.ByteArrayToString(bytes) + " to: " + dst.ToString("X"));
 
             IntPtr hProc = OpenProcess(ProcessAccessFlags.All, false, (int)proc.Id);
-            //VirtualProtectEx(proc, dst, size, 0x40, out oldProt);
+            VirtualProtectEx(proc.Handle, dst, size, PageAccessFlags.PAGE_READWRITE, out oldProt);
             WriteProcessMemory(hProc, dst, bytes, size, out num);
-            //VirtualProtectEx(proc, dst, size, oldProt, out oldProt);
+            VirtualProtectEx(proc.Handle, dst, size, oldProt, out oldProt);
             Console.WriteLine(num);
         }
 

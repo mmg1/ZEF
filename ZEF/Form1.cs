@@ -39,7 +39,7 @@ namespace ZEF {
 
             byte[] buf = new byte[100];
             IntPtr numOfBytesRead;
-            IntPtr addr = (IntPtr)0x00E3158D;
+            IntPtr addr = Core.GetModuleBaseAddress(g_Proc, "Testing.exe");
 
             IntPtr hProc = Core.OpenProcess(Core.ProcessAccessFlags.VirtualMemoryRead, false, g_Proc.Id);
             Core.ReadProcessMemory(hProc, addr, buf, buf.Length, out numOfBytesRead);
@@ -47,7 +47,9 @@ namespace ZEF {
             lbl_Bytes.Text = Util.ByteArrayToString(buf);
             Console.WriteLine(Util.ByteArrayToString(buf));
 
-            byte[] bytes = new byte[20] {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+            Console.WriteLine(addr.ToString("X"));
+
+            byte[] bytes = new byte[20] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
             Core.Patch(g_Proc, addr, bytes, (UIntPtr)bytes.Length);
         }
     }
