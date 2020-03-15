@@ -43,8 +43,9 @@ namespace ZEF {
         }
         // Write to memory:
         public static void Patch(Process proc, IntPtr dst, byte[] bytes, UIntPtr size) {
-            PageAccessFlags oldProt;
             IntPtr num;
+            PageAccessFlags oldProt;
+
             Console.WriteLine("Writing " + Util.ByteArrayToString(bytes) + " to: " + dst.ToString("X"));
 
             IntPtr hProc = OpenProcess(ProcessAccessFlags.All, false, (int)proc.Id);

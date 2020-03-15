@@ -14,43 +14,62 @@ using System.Diagnostics;
 
 namespace ZEF {
     public partial class Form1 : Form {
-        Process g_Proc;
+        public static Process g_Proc;
+        public static IntPtr modAddr;
+
         public Form1() {
             InitializeComponent();
+            g_Proc = Process.GetCurrentProcess();
         }
 
         private void btnClick_GetProcID(object sender, EventArgs e) {
             try {
-                g_Proc = System.Diagnostics.Process.GetProcessesByName(txt_ProcName.Text)[0];
+                g_Proc = Process.GetProcessesByName(txt_ProcName.Text)[0];
             } catch(System.IndexOutOfRangeException) {
-                lbl_ProcID.Text = "<ProcID>";
+                txt_ProcID.Text = "<ProcID>";
                 return;
             }
 
-            lbl_ProcID.Text = Convert.ToString(g_Proc.Id);
-            this.Text = txt_ProcName.Text;
+            txt_ProcID.Text = Convert.ToString(g_Proc.Id);
+            this.Text = "ZEF - Process: " + txt_ProcName.Text;
         }
 
         private void btnClick_GetMod(object sender, EventArgs e) {
-            if(g_Proc.Id == -1) {
+            if(txt_ProcID.Text == "<ProcID>") {
                 Console.WriteLine("GetMod: Invalid ProcID.");
                 return;
+            }            
+            modAddr = Core.GetModuleBaseAddress(g_Proc, "Testing.exe");
+            txt_ModAddr.Text = "0x" + modAddr.ToString("X");
+
+            //Console.WriteLine(addr.ToString("X"));
+
+            //byte[] bytes = new byte[20] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            //Core.Patch(g_Proc, addr, bytes, (UIntPtr)bytes.Length);
+        }
+
+        private void btnClick_ReadAddr(object sender, EventArgs e) {
+            int size;
+            if(Int32.TryParse(txt_Size.Text, out size)) {
+                if(size > 0 && size < g_Proc.PagedSystemMemorySize64) {
+                    byte[] buf = new byte[size];
+                    IntPtr numOfBytesRead;
+
+                    // ---------------------------
+                    // WIP + TODO - Find a way to take an addr as input and pass that to read:
+                    // ---------------------------
+                    IntPtr addr = (IntPtr)(Convert.ToInt32(txt_ModAddr.Text));
+
+                    IntPtr hProc = Core.OpenProcess(Core.ProcessAccessFlags.VirtualMemoryRead, false, g_Proc.Id);
+                    Core.ReadProcessMemory(hProc, modAddr, buf, buf.Length, out numOfBytesRead);
+
+                    lbl_Bytes.Text = Util.ByteArrayToString(buf);
+                    Console.WriteLine(Util.ByteArrayToString(buf));
+                    return;
+                }
             }
-
-            byte[] buf = new byte[100];
-            IntPtr numOfBytesRead;
-            IntPtr addr = Core.GetModuleBaseAddress(g_Proc, "Testing.exe");
-
-            IntPtr hProc = Core.OpenProcess(Core.ProcessAccessFlags.VirtualMemoryRead, false, g_Proc.Id);
-            Core.ReadProcessMemory(hProc, addr, buf, buf.Length, out numOfBytesRead);
-
-            lbl_Bytes.Text = Util.ByteArrayToString(buf);
-            Console.WriteLine(Util.ByteArrayToString(buf));
-
-            Console.WriteLine(addr.ToString("X"));
-
-            byte[] bytes = new byte[20] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-            Core.Patch(g_Proc, addr, bytes, (UIntPtr)bytes.Length);
+            Console.WriteLine("Invalid Size");
+            return;
         }
     }
 }
