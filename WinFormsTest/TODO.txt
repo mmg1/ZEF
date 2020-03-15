@@ -1,0 +1,3 @@
+﻿Make it look good :P
+
+Fix ByteArrayToString space at beginning
