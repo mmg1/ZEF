@@ -15,5 +15,19 @@ namespace ZEF {
             }
             return hex.ToString();
         }
+
+        public static bool IsValidAddress(string hex) {
+            if(hex.Length > 16 || hex.Length < 0) {
+                Console.WriteLine("Addr too long.");
+                return false;
+            }
+            foreach(char x in hex) {
+                if(x > 'F' || x < 0) {
+                    Console.WriteLine("Addr out of range.");
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

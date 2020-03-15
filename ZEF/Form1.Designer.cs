@@ -37,7 +37,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txt_Addr = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.txt_ProcID = new System.Windows.Forms.TextBox();
             this.txt_ModAddr = new System.Windows.Forms.TextBox();
@@ -69,7 +69,7 @@
             this.txt_ModName.Name = "txt_ModName";
             this.txt_ModName.Size = new System.Drawing.Size(427, 20);
             this.txt_ModName.TabIndex = 3;
-            this.txt_ModName.Text = "Testing";
+            this.txt_ModName.Text = "Testing.exe";
             // 
             // btn_GetMod
             // 
@@ -129,12 +129,12 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.btnClick_ReadAddr);
             // 
-            // textBox1
+            // txt_Addr
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 165);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(320, 20);
-            this.textBox1.TabIndex = 9;
+            this.txt_Addr.Location = new System.Drawing.Point(12, 165);
+            this.txt_Addr.Name = "txt_Addr";
+            this.txt_Addr.Size = new System.Drawing.Size(320, 20);
+            this.txt_Addr.TabIndex = 9;
             // 
             // button2
             // 
@@ -171,6 +171,7 @@
             this.txt_Size.Name = "txt_Size";
             this.txt_Size.Size = new System.Drawing.Size(101, 20);
             this.txt_Size.TabIndex = 16;
+            this.txt_Size.Text = "0";
             // 
             // label5
             // 
@@ -193,7 +194,7 @@
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txt_Addr);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lbl_Bytes);
@@ -219,7 +220,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txt_Addr;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox txt_ProcID;
         private System.Windows.Forms.TextBox txt_ModAddr;

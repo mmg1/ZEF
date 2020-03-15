@@ -38,7 +38,7 @@ namespace ZEF {
             if(txt_ProcID.Text == "<ProcID>") {
                 Console.WriteLine("GetMod: Invalid ProcID.");
                 return;
-            }            
+            }
             modAddr = Core.GetModuleBaseAddress(g_Proc, "Testing.exe");
             txt_ModAddr.Text = "0x" + modAddr.ToString("X");
 
@@ -51,17 +51,51 @@ namespace ZEF {
         private void btnClick_ReadAddr(object sender, EventArgs e) {
             int size;
             if(Int32.TryParse(txt_Size.Text, out size)) {
-                if(size > 0 && size < g_Proc.PagedSystemMemorySize64) {
+                if(size >= 0 && size < g_Proc.PagedSystemMemorySize64) {
                     byte[] buf = new byte[size];
                     IntPtr numOfBytesRead;
 
                     // ---------------------------
                     // WIP + TODO - Find a way to take an addr as input and pass that to read:
                     // ---------------------------
-                    IntPtr addr = (IntPtr)(Convert.ToInt32(txt_ModAddr.Text));
+
+                    IntPtr addr = (IntPtr)0x0000000000000000;
+
+                    if(txt_Addr.Text.Length < 17) {
+                        if(txt_Addr.Text.StartsWith("base")) {
+                            //base+123
+                            string offset = txt_Addr.Text;
+                            // Strip "base+" and any spaces off to get only the offset:
+                            offset = offset.Remove(0, 4);
+                            offset = offset.Replace("+", "");
+                            offset = offset.Trim();
+                            offset = offset.ToUpper();
+                            Console.WriteLine("Offset: " + offset);
+                            if(Util.IsValidAddress(offset)) {
+                                addr = Core.GetModuleBaseAddress(g_Proc.Id, txt_ModName.Text);
+                                Console.WriteLine(((UInt64)addr + Convert.ToUInt64(offset, 16)).ToString("X"));                               
+                            }
+                            return;
+                        } else {
+                            foreach(char x in txt_Addr.Text) {
+                                if(x > 'F' || x < 0) {
+                                    Console.WriteLine("Invalid Char: " + x);
+                                    return;
+                                }
+                            }
+                            try {
+                                addr = (IntPtr)Convert.ToInt64(txt_Addr.Text, 16);
+                            } catch(System.ArgumentOutOfRangeException) {
+                                Console.WriteLine("EX: Addr out of range.");
+                                return;
+                            }
+                        }
+                    }
+
+                    Console.WriteLine(addr.ToString("X"));
 
                     IntPtr hProc = Core.OpenProcess(Core.ProcessAccessFlags.VirtualMemoryRead, false, g_Proc.Id);
-                    Core.ReadProcessMemory(hProc, modAddr, buf, buf.Length, out numOfBytesRead);
+                    Core.ReadProcessMemory(hProc, addr, buf, buf.Length, out numOfBytesRead);
 
                     lbl_Bytes.Text = Util.ByteArrayToString(buf);
                     Console.WriteLine(Util.ByteArrayToString(buf));

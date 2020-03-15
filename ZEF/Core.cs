@@ -18,6 +18,18 @@ namespace ZEF {
             }
             return addr;
         }
+        
+        public static bool GetOffset(IntPtr baseAddr, string offset, out IntPtr result) {
+            offset = offset.Replace("+", "");
+            offset = offset.Trim();
+            offset = offset.ToUpper();
+            if(Util.IsValidAddress(offset)) {
+                Console.WriteLine(((UInt64)baseAddr + Convert.ToUInt64(offset, 16)).ToString("X"));
+            }
+            result = (IntPtr)0x0;
+            return false;
+        }
+
         // Get mod base addr with procID:
         public static IntPtr GetModuleBaseAddress(int procId, string modName) {
             IntPtr modBaseAddr = IntPtr.Zero;
