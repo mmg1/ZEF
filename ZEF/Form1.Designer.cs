@@ -42,7 +42,9 @@
             this.txt_ProcID = new System.Windows.Forms.TextBox();
             this.txt_ModAddr = new System.Windows.Forms.TextBox();
             this.txt_Size = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
+            this.lbl_Size = new System.Windows.Forms.Label();
+            this.txt_Offset = new System.Windows.Forms.TextBox();
+            this.lbl_Offset = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btn_GetProcID
@@ -167,27 +169,46 @@
             // 
             // txt_Size
             // 
-            this.txt_Size.Location = new System.Drawing.Point(338, 165);
+            this.txt_Size.Location = new System.Drawing.Point(445, 165);
             this.txt_Size.Name = "txt_Size";
             this.txt_Size.Size = new System.Drawing.Size(101, 20);
             this.txt_Size.TabIndex = 16;
             this.txt_Size.Text = "0";
             // 
-            // label5
+            // lbl_Size
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(335, 149);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(69, 13);
-            this.label5.TabIndex = 17;
-            this.label5.Text = "Size of R/W:";
+            this.lbl_Size.AutoSize = true;
+            this.lbl_Size.Location = new System.Drawing.Point(442, 149);
+            this.lbl_Size.Name = "lbl_Size";
+            this.lbl_Size.Size = new System.Drawing.Size(69, 13);
+            this.lbl_Size.TabIndex = 17;
+            this.lbl_Size.Text = "Size of R/W:";
+            // 
+            // txt_Offset
+            // 
+            this.txt_Offset.Location = new System.Drawing.Point(338, 165);
+            this.txt_Offset.Name = "txt_Offset";
+            this.txt_Offset.Size = new System.Drawing.Size(101, 20);
+            this.txt_Offset.TabIndex = 18;
+            this.txt_Offset.Text = "0";
+            // 
+            // lbl_Offset
+            // 
+            this.lbl_Offset.AutoSize = true;
+            this.lbl_Offset.Location = new System.Drawing.Point(335, 149);
+            this.lbl_Offset.Name = "lbl_Offset";
+            this.lbl_Offset.Size = new System.Drawing.Size(69, 13);
+            this.lbl_Offset.TabIndex = 19;
+            this.lbl_Offset.Text = "Size of R/W:";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.lbl_Offset);
+            this.Controls.Add(this.txt_Offset);
+            this.Controls.Add(this.lbl_Size);
             this.Controls.Add(this.txt_Size);
             this.Controls.Add(this.txt_ModAddr);
             this.Controls.Add(this.txt_ProcID);
@@ -225,7 +246,9 @@
         private System.Windows.Forms.TextBox txt_ProcID;
         private System.Windows.Forms.TextBox txt_ModAddr;
         private System.Windows.Forms.TextBox txt_Size;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lbl_Size;
+        private System.Windows.Forms.TextBox txt_Offset;
+        private System.Windows.Forms.Label lbl_Offset;
     }
 }
 

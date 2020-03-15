@@ -19,13 +19,16 @@ namespace ZEF {
 
         public Form1() {
             InitializeComponent();
+            // Init the global proc var so it doesn't cause errors.
             g_Proc = Process.GetCurrentProcess();
         }
 
+        // Get the proc ID of the process written in the text box:
         private void btnClick_GetProcID(object sender, EventArgs e) {
             try {
                 g_Proc = Process.GetProcessesByName(txt_ProcName.Text)[0];
             } catch(System.IndexOutOfRangeException) {
+                //If it couldn't get the proc, the attempted array access above will throw and out of range exception.
                 txt_ProcID.Text = "<ProcID>";
                 return;
             }
@@ -34,6 +37,7 @@ namespace ZEF {
             this.Text = "ZEF - Process: " + txt_ProcName.Text;
         }
 
+        // Get the module address from the module written in the text box:
         private void btnClick_GetMod(object sender, EventArgs e) {
             if(txt_ProcID.Text == "<ProcID>") {
                 Console.WriteLine("GetMod: Invalid ProcID.");
@@ -41,29 +45,23 @@ namespace ZEF {
             }
             modAddr = Core.GetModuleBaseAddress(g_Proc, "Testing.exe");
             txt_ModAddr.Text = "0x" + modAddr.ToString("X");
-
-            //Console.WriteLine(addr.ToString("X"));
-
-            //byte[] bytes = new byte[20] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-            //Core.Patch(g_Proc, addr, bytes, (UIntPtr)bytes.Length);
         }
 
+        // Read the amount of memory specified by the size at the address + offset in the text boxes:
         private void btnClick_ReadAddr(object sender, EventArgs e) {
             int size;
-            if(Int32.TryParse(txt_Size.Text, out size)) {
+            if(Int32.TryParse(txt_Size.Text, out size)) {   // Try parsing UInt instead of Int32?
                 if(size >= 0 && size < g_Proc.PagedSystemMemorySize64) {
-                    byte[] buf = new byte[size];
                     IntPtr numOfBytesRead;
-
-                    // ---------------------------
-                    // WIP + TODO - Find a way to take an addr as input and pass that to read:
-                    // ---------------------------
-
                     IntPtr addr = (IntPtr)0x0000000000000000;
+                    byte[] buf = new byte[size];
 
+                    /// -------------------------------------------
+                    /// TODO: Use offset textbox instead of stripping string.
+                    /// -------------------------------------------
                     if(txt_Addr.Text.Length < 17) {
                         if(txt_Addr.Text.StartsWith("base")) {
-                            //base+123
+                            //base + OFFSET:
                             string offset = txt_Addr.Text;
                             // Strip "base+" and any spaces off to get only the offset:
                             offset = offset.Remove(0, 4);
