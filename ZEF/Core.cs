@@ -19,6 +19,7 @@ namespace ZEF {
             return addr;
         }
         
+        // WIP
         public static bool GetOffset(IntPtr baseAddr, string offset, out IntPtr result) {
             offset = offset.Replace("+", "");
             offset = offset.Trim();
@@ -67,6 +68,7 @@ namespace ZEF {
             Console.WriteLine(num);
         }
 
+        // Find address at the end of a series of pointers:
         public static IntPtr FindPTRAddr(IntPtr hProc, IntPtr ptr, int[] offsets) {
             var buffer = new byte[IntPtr.Size];
 

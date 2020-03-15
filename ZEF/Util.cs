@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ZEF {
     class Util {
+        // Convert byte array to string:
         public static string ByteArrayToString(byte[] ba) {
             StringBuilder hex = new StringBuilder(ba.Length * 2);
             foreach(byte b in ba) {
@@ -16,6 +17,7 @@ namespace ZEF {
             return hex.ToString();
         }
 
+        // Check if a string is a valid address:
         public static bool IsValidAddress(string hex) {
             if(hex.Length > 16 || hex.Length < 0) {
                 Console.WriteLine("Addr too long.");
