@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace WinFormsTest {
+namespace ZEF {
     public class Core : WinAPI {
         // Get mod base addr with Process data type:
         public static IntPtr GetModuleBaseAddress(Process proc, string modName) {

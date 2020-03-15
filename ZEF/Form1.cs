@@ -12,7 +12,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
-namespace WinFormsTest {
+namespace ZEF {
     public partial class Form1 : Form {
         Process g_Proc;
         public Form1() {
@@ -39,7 +39,7 @@ namespace WinFormsTest {
 
             byte[] buf = new byte[100];
             IntPtr numOfBytesRead;
-            IntPtr addr = (IntPtr)0x00007FF98F801000;
+            IntPtr addr = (IntPtr)0x00E3158D;
 
             IntPtr hProc = Core.OpenProcess(Core.ProcessAccessFlags.VirtualMemoryRead, false, g_Proc.Id);
             Core.ReadProcessMemory(hProc, addr, buf, buf.Length, out numOfBytesRead);

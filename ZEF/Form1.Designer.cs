@@ -1,4 +1,4 @@
-﻿namespace WinFormsTest
+﻿namespace ZEF
 {
     partial class Form1
     {

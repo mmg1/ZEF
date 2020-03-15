@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace WinFormsTest {
+namespace ZEF {
     public class WinAPI {
         public const int INVALID_HANDLE_VALUE = -1;
 

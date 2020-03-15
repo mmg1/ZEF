@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WinFormsTest.Properties
+namespace ZEF.Properties
 {
 
 

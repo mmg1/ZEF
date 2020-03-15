@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinFormsTest {
+namespace ZEF {
     class Util {
         public static string ByteArrayToString(byte[] ba) {
             StringBuilder hex = new StringBuilder(ba.Length * 2);
