@@ -69,75 +69,69 @@ namespace ZEF
         private void btnClick_ReadAddr(object sender, EventArgs e)
         {
             int size;
-            if(Int32.TryParse(txt_Size.Text, out size))
-            {   // Try parsing UInt instead of Int32?
+            if(Int32.TryParse(txt_Size.Text, out size)) // Try parsing UInt instead of Int32?
+            {
                 if(size > 0 && size < g_Proc.PagedSystemMemorySize64)
                 {
+                    // Init vars:
                     IntPtr addr = (IntPtr)0x0;
                     string addrTxt = txt_Addr.Text.Replace(" ", "").Trim();
 
-                    // Find how to check for base string and skip other junk
-                    if(addrTxt == "base")
-                    {
-                        if(modAddr == (IntPtr)0x0)
-                        {
-                            Log("Invalid module address of \"" + modAddr.ToString("X") + "\".");
-                        }
-                        else
-                        {
-                            addr = modAddr;
-                        }
-                    }
-
+                    // Addresses are 0-16 (inclusive) chars long, validate given to match that:
                     if(addrTxt.Length < 17 && addrTxt.Length > 0)
                     {
-                        //First, set and validate the address:
-                        if(!Util.IsValidAddress(addrTxt)) { Log("Invalid Address."); return; }
-                        addr = (IntPtr)(Convert.ToUInt64(addrTxt, 16));
+                        //First, set and validate the address if it's not "base":
+                        if(addrTxt.ToLower() != "base")
+                        {
+                            if(!Util.IsValidAddress(addrTxt)) { Log("Invalid Address."); return; }
+                            addr = (IntPtr)(Convert.ToUInt64(addrTxt, 16));
+                        }
 
                         //Check for an offset:
                         if(txt_Offset.Text.Length > 0)
                         {
-                            // Get the sign (+-) for the offset and validate:
+                            // Get the sign (+-) for the offset:
                             string offTxt = txt_Offset.Text.Trim().ToUpper();
                             string sign = offTxt.Substring(0, 1);
-
-                            // Add or sub offset:
+                            // Check for sub offset (default to +):
                             if(sign == "-")
                             {
                                 //Remove sign and junk and validate:
                                 offTxt = offTxt.Replace(" ", "").Replace("-", "").Trim();
                                 if(!Util.IsValidAddress(offTxt)) { Log("Invalid Offset."); return; }
 
-                                addr = (IntPtr)(Convert.ToUInt64(addrTxt.Trim(), 16) - (Convert.ToUInt64(offTxt, 16)));
+                                // If "base" is being used, then add to the base. Otherwise, add to the supplied addr:
+                                addr = (addrTxt.ToLower() == "base") ? (IntPtr)(Convert.ToUInt64(txt_ModAddr.Text, 16) - (Convert.ToUInt64(offTxt, 16)))
+                                    : (IntPtr)(Convert.ToUInt64(addrTxt, 16) - (Convert.ToUInt64(offTxt, 16)));
                                 Log("Final Addr - Off = " + addr.ToString("X"));
                             }
+                            // + sign or no sign:
                             else
                             {
                                 offTxt = offTxt.Replace(" ", "").Replace("+", "").Trim();
                                 if(!Util.IsValidAddress(offTxt)) { Log("Invalid Offset."); return; }
 
-                                addr = (IntPtr)(Convert.ToUInt64(addrTxt.Trim(), 16) + (Convert.ToUInt64(offTxt, 16)));
+                                // If "base" is being used, then add to the base. Otherwise, add to the supplied addr:
+                                addr = (addrTxt.ToLower() == "base") ? (IntPtr)(Convert.ToUInt64(txt_ModAddr.Text, 16) + (Convert.ToUInt64(offTxt, 16)))
+                                    : (IntPtr)(Convert.ToUInt64(addrTxt, 16) + (Convert.ToUInt64(offTxt, 16)));
                                 Log("Final Addr + Off = " + addr.ToString("X"));
                             }
                         }
-                        else
-                        {
-                            Log("Final Addr (no off) = " + addr.ToString("X"));
-                        }
+                        // No offset:
+                        else { Log("Final Addr (no off) = " + addr.ToString("X")); }
                     }
 
-
+                    // --- Read Mem --- //
                     byte[] buf = new byte[size];
                     IntPtr numOfBytesRead;
 
-                    Console.WriteLine(addr.ToString("X"));
+                    //Console.WriteLine(addr.ToString("X"));
 
                     IntPtr hProc = Core.OpenProcess(Core.ProcessAccessFlags.VirtualMemoryRead, false, g_Proc.Id);
                     Core.ReadProcessMemory(hProc, addr, buf, buf.Length, out numOfBytesRead);
 
                     lbl_Bytes.Text = Util.ByteArrayToString(buf);
-                    Console.WriteLine(Util.ByteArrayToString(buf));
+                    //Console.WriteLine(Util.ByteArrayToString(buf));
                     return;
                 }
                 else
@@ -145,7 +139,8 @@ namespace ZEF
                     Log("Size of data to R/W was 0.");
                 }
             }
-            Console.WriteLine("Invalid Size");
+            //Console.WriteLine("Invalid Size");
+            Log("Invalid R/W Size. Too big or invalid chars.");
             return;
         }
     }

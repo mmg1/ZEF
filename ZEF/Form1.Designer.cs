@@ -46,6 +46,7 @@
             this.txt_Offset = new System.Windows.Forms.TextBox();
             this.lbl_Offset = new System.Windows.Forms.Label();
             this.rtxt_Debug = new System.Windows.Forms.RichTextBox();
+            this.lbl_Debug = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btn_GetProcID
@@ -109,9 +110,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(13, 81);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(76, 13);
+            this.label2.Size = new System.Drawing.Size(234, 13);
             this.label2.TabIndex = 8;
-            this.label2.Text = "Module Name:";
+            this.label2.Text = "Module Name (extension required such as .exe):";
             // 
             // label3
             // 
@@ -174,7 +175,7 @@
             this.txt_Size.Name = "txt_Size";
             this.txt_Size.Size = new System.Drawing.Size(101, 20);
             this.txt_Size.TabIndex = 16;
-            this.txt_Size.Text = "0";
+            this.txt_Size.Text = "100";
             // 
             // lbl_Size
             // 
@@ -205,7 +206,7 @@
             // rtxt_Debug
             // 
             this.rtxt_Debug.HideSelection = false;
-            this.rtxt_Debug.Location = new System.Drawing.Point(551, 12);
+            this.rtxt_Debug.Location = new System.Drawing.Point(551, 29);
             this.rtxt_Debug.Name = "rtxt_Debug";
             this.rtxt_Debug.ReadOnly = true;
             this.rtxt_Debug.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
@@ -213,11 +214,21 @@
             this.rtxt_Debug.TabIndex = 22;
             this.rtxt_Debug.Text = "";
             // 
+            // lbl_Debug
+            // 
+            this.lbl_Debug.AutoSize = true;
+            this.lbl_Debug.Location = new System.Drawing.Point(551, 13);
+            this.lbl_Debug.Name = "lbl_Debug";
+            this.lbl_Debug.Size = new System.Drawing.Size(79, 13);
+            this.lbl_Debug.TabIndex = 23;
+            this.lbl_Debug.Text = "Debug/Output:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lbl_Debug);
             this.Controls.Add(this.rtxt_Debug);
             this.Controls.Add(this.lbl_Offset);
             this.Controls.Add(this.txt_Offset);
@@ -263,6 +274,7 @@
         private System.Windows.Forms.TextBox txt_Offset;
         private System.Windows.Forms.Label lbl_Offset;
         private System.Windows.Forms.RichTextBox rtxt_Debug;
+        private System.Windows.Forms.Label lbl_Debug;
     }
 }
 
