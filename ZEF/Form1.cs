@@ -12,22 +12,34 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
-namespace ZEF {
-    public partial class Form1 : Form {
+namespace ZEF
+{
+    public partial class Form1 : Form
+    {
         public static Process g_Proc;
-        public static IntPtr modAddr;
+        public static IntPtr modAddr = (IntPtr)0x0;
 
-        public Form1() {
+        public Form1()
+        {
             InitializeComponent();
             // Init the global proc var so it doesn't cause errors.
             g_Proc = Process.GetCurrentProcess();
         }
 
+        public void Log(string str)
+        {
+            rtxt_Debug.AppendText(str + Environment.NewLine);
+        }
+
         // Get the proc ID of the process written in the text box:
-        private void btnClick_GetProcID(object sender, EventArgs e) {
-            try {
+        private void btnClick_GetProcID(object sender, EventArgs e)
+        {
+            try
+            {
                 g_Proc = Process.GetProcessesByName(txt_ProcName.Text)[0];
-            } catch(System.IndexOutOfRangeException) {
+            }
+            catch(System.IndexOutOfRangeException)
+            {
                 //If it couldn't get the proc, the attempted array access above will throw and out of range exception.
                 txt_ProcID.Text = "<ProcID>";
                 return;
@@ -38,57 +50,86 @@ namespace ZEF {
         }
 
         // Get the module address from the module written in the text box:
-        private void btnClick_GetMod(object sender, EventArgs e) {
-            if(txt_ProcID.Text == "<ProcID>") {
-                Console.WriteLine("GetMod: Invalid ProcID.");
+        private void btnClick_GetMod(object sender, EventArgs e)
+        {
+            if(txt_ProcID.Text == "<ProcID>")
+            {
+                Log("Error getting module: Invalid Process ID.");
                 return;
             }
-            modAddr = Core.GetModuleBaseAddress(g_Proc, "Testing.exe");
+            modAddr = Core.GetModuleBaseAddress(g_Proc, txt_ModName.Text);
+            if(modAddr == (IntPtr)0x0)
+            {
+                return;
+            }
             txt_ModAddr.Text = "0x" + modAddr.ToString("X");
         }
 
         // Read the amount of memory specified by the size at the address + offset in the text boxes:
-        private void btnClick_ReadAddr(object sender, EventArgs e) {
+        private void btnClick_ReadAddr(object sender, EventArgs e)
+        {
             int size;
-            if(Int32.TryParse(txt_Size.Text, out size)) {   // Try parsing UInt instead of Int32?
-                if(size >= 0 && size < g_Proc.PagedSystemMemorySize64) {
-                    IntPtr numOfBytesRead;
-                    IntPtr addr = (IntPtr)0x0000000000000000;
-                    byte[] buf = new byte[size];
+            if(Int32.TryParse(txt_Size.Text, out size))
+            {   // Try parsing UInt instead of Int32?
+                if(size > 0 && size < g_Proc.PagedSystemMemorySize64)
+                {
+                    IntPtr addr = (IntPtr)0x0;
+                    string addrTxt = txt_Addr.Text.Replace(" ", "").Trim();
 
-                    /// -------------------------------------------
-                    /// TODO: Use offset textbox instead of stripping string.
-                    /// -------------------------------------------
-                    if(txt_Addr.Text.Length < 17) {
-                        if(txt_Addr.Text.StartsWith("base")) {
-                            //base + OFFSET:
-                            string offset = txt_Addr.Text;
-                            // Strip "base+" and any spaces off to get only the offset:
-                            offset = offset.Remove(0, 4);
-                            offset = offset.Replace("+", "");
-                            offset = offset.Trim();
-                            offset = offset.ToUpper();
-                            Console.WriteLine("Offset: " + offset);
-                            if(Util.IsValidAddress(offset)) {
-                                addr = Core.GetModuleBaseAddress(g_Proc.Id, txt_ModName.Text);
-                                Console.WriteLine(((UInt64)addr + Convert.ToUInt64(offset, 16)).ToString("X"));                               
-                            }
-                            return;
-                        } else {
-                            foreach(char x in txt_Addr.Text) {
-                                if(x > 'F' || x < 0) {
-                                    Console.WriteLine("Invalid Char: " + x);
-                                    return;
-                                }
-                            }
-                            try {
-                                addr = (IntPtr)Convert.ToInt64(txt_Addr.Text, 16);
-                            } catch(System.ArgumentOutOfRangeException) {
-                                Console.WriteLine("EX: Addr out of range.");
-                                return;
-                            }
+                    // Find how to check for base string and skip other junk
+                    if(addrTxt == "base")
+                    {
+                        if(modAddr == (IntPtr)0x0)
+                        {
+                            Log("Invalid module address of \"" + modAddr.ToString("X") + "\".");
+                        }
+                        else
+                        {
+                            addr = modAddr;
                         }
                     }
+
+                    if(addrTxt.Length < 17 && addrTxt.Length > 0)
+                    {
+                        //First, set and validate the address:
+                        if(!Util.IsValidAddress(addrTxt)) { Log("Invalid Address."); return; }
+                        addr = (IntPtr)(Convert.ToUInt64(addrTxt, 16));
+
+                        //Check for an offset:
+                        if(txt_Offset.Text.Length > 0)
+                        {
+                            // Get the sign (+-) for the offset and validate:
+                            string offTxt = txt_Offset.Text.Trim().ToUpper();
+                            string sign = offTxt.Substring(0, 1);
+
+                            // Add or sub offset:
+                            if(sign == "-")
+                            {
+                                //Remove sign and junk and validate:
+                                offTxt = offTxt.Replace(" ", "").Replace("-", "").Trim();
+                                if(!Util.IsValidAddress(offTxt)) { Log("Invalid Offset."); return; }
+
+                                addr = (IntPtr)(Convert.ToUInt64(addrTxt.Trim(), 16) - (Convert.ToUInt64(offTxt, 16)));
+                                Log("Final Addr - Off = " + addr.ToString("X"));
+                            }
+                            else
+                            {
+                                offTxt = offTxt.Replace(" ", "").Replace("+", "").Trim();
+                                if(!Util.IsValidAddress(offTxt)) { Log("Invalid Offset."); return; }
+
+                                addr = (IntPtr)(Convert.ToUInt64(addrTxt.Trim(), 16) + (Convert.ToUInt64(offTxt, 16)));
+                                Log("Final Addr + Off = " + addr.ToString("X"));
+                            }
+                        }
+                        else
+                        {
+                            Log("Final Addr (no off) = " + addr.ToString("X"));
+                        }
+                    }
+
+
+                    byte[] buf = new byte[size];
+                    IntPtr numOfBytesRead;
 
                     Console.WriteLine(addr.ToString("X"));
 
@@ -98,6 +139,10 @@ namespace ZEF {
                     lbl_Bytes.Text = Util.ByteArrayToString(buf);
                     Console.WriteLine(Util.ByteArrayToString(buf));
                     return;
+                }
+                else
+                {
+                    Log("Size of data to R/W was 0.");
                 }
             }
             Console.WriteLine("Invalid Size");

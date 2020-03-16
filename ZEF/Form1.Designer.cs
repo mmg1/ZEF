@@ -45,6 +45,7 @@
             this.lbl_Size = new System.Windows.Forms.Label();
             this.txt_Offset = new System.Windows.Forms.TextBox();
             this.lbl_Offset = new System.Windows.Forms.Label();
+            this.rtxt_Debug = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // btn_GetProcID
@@ -169,7 +170,7 @@
             // 
             // txt_Size
             // 
-            this.txt_Size.Location = new System.Drawing.Point(445, 165);
+            this.txt_Size.Location = new System.Drawing.Point(460, 165);
             this.txt_Size.Name = "txt_Size";
             this.txt_Size.Size = new System.Drawing.Size(101, 20);
             this.txt_Size.TabIndex = 16;
@@ -178,7 +179,7 @@
             // lbl_Size
             // 
             this.lbl_Size.AutoSize = true;
-            this.lbl_Size.Location = new System.Drawing.Point(442, 149);
+            this.lbl_Size.Location = new System.Drawing.Point(457, 149);
             this.lbl_Size.Name = "lbl_Size";
             this.lbl_Size.Size = new System.Drawing.Size(69, 13);
             this.lbl_Size.TabIndex = 17;
@@ -197,15 +198,27 @@
             this.lbl_Offset.AutoSize = true;
             this.lbl_Offset.Location = new System.Drawing.Point(335, 149);
             this.lbl_Offset.Name = "lbl_Offset";
-            this.lbl_Offset.Size = new System.Drawing.Size(69, 13);
+            this.lbl_Offset.Size = new System.Drawing.Size(38, 13);
             this.lbl_Offset.TabIndex = 19;
-            this.lbl_Offset.Text = "Size of R/W:";
+            this.lbl_Offset.Text = "Offset:";
+            // 
+            // rtxt_Debug
+            // 
+            this.rtxt_Debug.HideSelection = false;
+            this.rtxt_Debug.Location = new System.Drawing.Point(551, 12);
+            this.rtxt_Debug.Name = "rtxt_Debug";
+            this.rtxt_Debug.ReadOnly = true;
+            this.rtxt_Debug.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.rtxt_Debug.Size = new System.Drawing.Size(237, 105);
+            this.rtxt_Debug.TabIndex = 22;
+            this.rtxt_Debug.Text = "";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.rtxt_Debug);
             this.Controls.Add(this.lbl_Offset);
             this.Controls.Add(this.txt_Offset);
             this.Controls.Add(this.lbl_Size);
@@ -249,6 +262,7 @@
         private System.Windows.Forms.Label lbl_Size;
         private System.Windows.Forms.TextBox txt_Offset;
         private System.Windows.Forms.Label lbl_Offset;
+        private System.Windows.Forms.RichTextBox rtxt_Debug;
     }
 }
 
