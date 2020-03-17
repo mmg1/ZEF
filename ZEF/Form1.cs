@@ -143,5 +143,16 @@ namespace ZEF
             Log("Invalid R/W Size. Too big or invalid chars.");
             return;
         }
+
+        private void btnClick_WriteAddr(object sender, EventArgs e)
+        {
+            /*
+             * Very similar to btnClick_ReadAddr. Should probably write some functions.
+             * Check R/W size.
+             * Check if addr == "base":
+             *      addr = base + offset;
+             *  else: addr = input + offset
+            */
+        }
     }
 }

@@ -148,6 +148,7 @@
             this.button2.TabIndex = 13;
             this.button2.Text = "Write";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.btnClick_WriteAddr);
             // 
             // txt_ProcID
             // 
