@@ -1,0 +1,1 @@
+Add a GetProc to get an entire PROCESSENTRY32. List info about that proc.

@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Added by Z0F:
+*.cbt
+*.tlog
+*.props
+*qmake*
+*[Mm]akefile*
+
 # User-specific files
 *.rsuser
 *.suo
@@ -69,10 +76,10 @@ StyleCopReport.xml
 *_h.h
 *.ilk
 *.meta
-*.obj
+#*.obj
 *.iobj
 *.pch
-*.pdb
+#*.pdb
 *.ipdb
 *.pgc
 *.pgd
