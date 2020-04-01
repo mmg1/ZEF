@@ -37,7 +37,7 @@ void MainWindow::Log(QString str){
 }
 
 void MainWindow::UpdateProcInfo(){
-    ui->txt_ProcInfo->setPlainText("");
+    ui->txt_ProcInfo->clear();
 
     if(!currentProcess.dwSize){
         ui->lbl_ProcID->setText("Process ID -");
@@ -54,14 +54,14 @@ void MainWindow::UpdateProcInfo(){
 }
 
 void MainWindow::UpdateModInfo(){
-    ui->txt_ModInfo->setPlainText("");
+    ui->txt_ModInfo->clear();
 
     if(!currentModule.dwSize){
         ui->lbl_ModAddr->setText("Module Address -");
         return;
     }
 
-    QString modAddr = QString("%1").arg((quintptr)currentModule.modBaseAddr, QT_POINTER_SIZE * 2, 16, QChar('0'));
+    QString modAddr = QString("%1").arg((quintptr)currentModule.modBaseAddr, QT_POINTER_SIZE * 2, 16, QChar('0')).toUpper();
 
     ui->lbl_ModAddr->setText("Module Address - " + modAddr);
     ui->txt_ModInfo->appendPlainText("Name: " + QString::fromWCharArray(currentModule.szModule));
@@ -110,7 +110,6 @@ void MainWindow::on_btn_GetProcName_clicked()
         return;
     }
 
-
     currentProcess = GetProcEntry(ui->txt_ProcName->text().toULong());
     UpdateProcInfo();
 
@@ -133,18 +132,44 @@ void MainWindow::on_btn_GetModAddr_clicked()
     UpdateModInfo();
 }
 
+void MainWindow::on_btn_Read_clicked()
+{
+    bool isValid;
+    int size;
+    ULONGLONG addr;
+    byte currByte;
+    HANDLE hProc;
 
+    // TODO: More error handling?
+    size = ui->txt_Size->text().toInt(&isValid, 10);
+    if(!isValid || ui->txt_Size->text().toInt() <= 0){
+        Log("Invalid Size.");
+        return;
+    }else if(!currentModule.dwSize){
+        Log("Module needed before reading or writing memory.");
+        return;
+    }else if(size > 2048){
+        Log("R/W size too big. Max is 2048 bytes.");
+        return;
+    }
 
+    addr = ui->txt_Address->text().toULongLong(&isValid, 16);
+    if(!isValid){
+        Log("Invalid Address.");
+        return;
+    }
 
+    hProc = OpenProcess(PROCESS_ALL_ACCESS, false, currentProcess.th32ProcessID);
 
+    ui->txt_Output->clear();
+    ui->txt_Output->insertPlainText("Reading " + QString::number(size) + " bytes at " + QString::number(addr, 16).toUpper()
+                                    + " in module " + QString::fromStdWString(currentModule.szModule) + ":\n");
 
-
-
-
-
-
-
-
-
-
-
+    // insertPlainText puts data at the front, which means the bytes don't need to be reversed :)
+    for(int x = 0; x < size; x++){
+        ReadProcessMemory(hProc, (LPCVOID)(addr + x), &currByte, 1, NULL);
+        ui->txt_Output->insertPlainText(QString("%1").arg(currByte, 2, 16, QChar('0')).toUpper());
+    }
+    Log("Read " + QString::number(size) + " bytes at " + QString::number(addr, 16).toUpper() + ".");
+    CloseHandle(hProc);
+}

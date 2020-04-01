@@ -32,6 +32,8 @@ private slots:
 
     void Update();
 
+    void on_btn_Read_clicked();
+
 private:
     Ui::MainWindow *ui;
     QTimer *timer;
